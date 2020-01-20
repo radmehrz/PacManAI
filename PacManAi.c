@@ -104,3 +104,35 @@ void printMap(int x , int y){
 	printf("|");fore(y)printf("_");printf("|");
 	endl
 }
+
+void findWay(int startX, int startY , int maxX , int maxY){
+	if(map[startX+1][startY].data!=cBlock &&!map[startX+1][startY].visited && startX != maxX-1)
+	{
+		map[startX+1][startY].visited = true;
+		map[startX+1][startY].cx = -1;
+		map[startX+1][startY].cy = 0;
+		findWay(startX+1,startY,maxX,maxY);
+	}
+	if(map[startX-1][startY].data != cBlock &&!map[startX-1][startY].visited && startX != 0)
+	{
+		map[startX-1][startY].visited = true;
+		map[startX-1][startY].cx = 1;
+		map[startX-1][startY].cy = 0;
+		findWay(startX-1,startY,maxX,maxY);
+	}
+	if(map[startX][startY-1].data != cBlock &&!map[startX][startY-1].visited && startY != 0)
+	{
+		map[startX][startY-1].visited = true;
+		map[startX][startY-1].cx = 0;
+		map[startX][startY-1].cy = +1;
+		findWay(startX,startY-1,maxX,maxY);
+	}
+	if(map[startX][startY+1].data != cBlock &&!map[startX][startY+1].visited && startY != maxY-1)
+	{
+		map[startX][startY+1].visited = true;
+		map[startX][startY+1].cx = 0;
+		map[startX][startY+1].cy = -1;
+		findWay(startX,startY+1,maxX,maxY);
+	}
+}
+
