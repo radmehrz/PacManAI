@@ -85,3 +85,22 @@ void init_map(int maxX, int maxY){
 	}
 	fclose(fptr);
 }
+
+void printMap(int x , int y){
+	fore(y)printf("_");printf("__\n");
+	for(int i = 0;i < x;i++)
+	{
+		printf("|");
+		for(int j = 0;j < y;j++)
+		{
+			if(i == X && j == Y)printf("%c" , cPlayer);
+			else
+			printf("%c" , map[i][j].data);
+			
+		}
+		printf("|");
+		endl
+	}
+	printf("|");fore(y)printf("_");printf("|");
+	endl
+}
