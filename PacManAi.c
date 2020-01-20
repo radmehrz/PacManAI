@@ -338,18 +338,100 @@ void gotoxy(int eex, int eey)
 
 
 int main(){
-	init_map(4,4);
-	system("@cls||clear");
-	printMap(4,4);
-	sleep(1);
-	findStar(4,4);
-	findWay(star.x,star.y,4,4);
 	while(1)
 	{
-		if(checkEnd(4,4)) break;
-		move();
-		sleep(1);
+		int choose = menu();
+		if(choose == aiplay)
+		{
+			init_map(4,4);
+			system("@cls||clear");
+			printMap(4,4);
+			sleep(1);
+			findStar(4,4);
+			findWay(star.x,star.y,4,4);
+			while(1)
+			{
+				if(checkEnd(4,4)) break;
+				move();
+				sleep(1);
+			}
+		}
+		if(choose == selfplay)
+		{
+			init_map(5,10);
+			system("@cls||clear");
+			printMap(5,10);
+			while(1)
+			{
+				if(checkEnd(5,10)) break;
+				int key = getKey();
+				if(key == up)
+				{
+					if(X == 0 && !wall && map[4][Y].data != cBlock)
+						X = 4;
+					else if(X != 0 && map[X-1][Y].data != cBlock) 
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
+						X--;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
+				}
+				if(key == down)
+				{
+					if(X == 4 && !wall && map[0][Y].data != cBlock)
+						X = 0;
+					else if(X != 4 && map[X+1][Y].data != cBlock) 
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
+						X++;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
+				}
+				if(key == right)
+				{
+					if(Y == 9 && !wall  && map[X][0].data != cBlock)
+						Y = 0;
+					else if(Y != 9 && map[X][Y+1].data != cBlock) 
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
+						Y++;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
+				}
+				if(key == left)
+				{
+					if(Y == 0 && !wall && map[X][9].data != cBlock)
+						Y = 9;
+					else if(Y != 0 && map[X][Y-1].data != cBlock)
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
+						Y--;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
+				}
+				if(key == esc)
+				{
+					break;
+				}
+				
+			}
+		}
+		if(choose == settings)
+		{
+			options();
+		}
+		if(choose == quit)
+		{
+			exit(0);
+		}
 	}
-
 	
 }
