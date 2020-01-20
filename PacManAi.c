@@ -26,8 +26,6 @@ typedef struct star{
 	int y;
 }Star;
 
-
-
 enum key{up,down,left,right,enter,esc};
 enum option{aiplay,selfplay,settings,quit};
 
@@ -136,3 +134,222 @@ void findWay(int startX, int startY , int maxX , int maxY){
 	}
 }
 
+
+
+void move(){
+	gotoxy(Y+1,X+1);
+	printf("%c" , map[X][Y].data);
+	int newX = map[X][Y].cx;
+	int newY = map[X][Y].cy;
+	X += newX;
+	Y += newY;
+	gotoxy(Y+1,X+1);
+	printf("%c\b" , cPlayer);
+	
+}
+
+void findStar(int maxX,int maxY){
+	for(int i = 0;i < maxX;i++)
+	for(int j = 0;j < maxY;j++)
+	{
+		if(map[i][j].data == cFruit)
+		{
+			star.x = i;
+			star.y = j;
+			return;
+		}
+	}
+	
+	star.x = -1; //No Star?
+	star.y = -1;
+}
+
+void clearWay(int maxX,int maxY){
+	for(int i = 0;i < maxX;i++)
+	for(int j = 0;j < maxY;j++)
+	{
+		map[i][j].cx = -1;
+		map[i][j].cy = -1;
+		map[i][j].visited = false;
+	}
+}
+
+bool checkEnd(int maxX,int maxY){
+	if(map[X][Y].data==cFruit)
+		{
+			map[X][Y].data= cEmpty;
+			findStar(maxX,maxY);
+			if(star.x == -1) return true;
+			clearWay(maxX,maxY);
+			findWay(star.x,star.y,maxX,maxY);
+
+		}
+		return false;
+}
+
+int getKey(){
+	int ch1, ch2;
+	ch1 = getch();
+	if(ch1 == 13)return enter;
+	if(ch1 == 27)return esc;
+	ch2 = 0;
+	if (ch1 == 0xE0) {
+		ch2 = getch();
+		switch(ch2)
+		{
+			case 72: return up;
+			case 80: return down;
+			case 75: return left;
+			case 77: return right;
+			default:
+			return getKey();
+		};
+	}
+	else
+	{
+		return getKey();
+	}
+}
+
+int menu(){
+	int choose = 0;
+	while(1)
+	{
+		system("@cls||clear");
+		printf("Menu: \n");
+		printf("_________________________\n");
+		printf("| %c Auto Play           |\n" , choose == 0?'>':' ');
+		printf("|_______________________|\n");
+		printf("| %c Self Play           |\n" , choose == 1?'>':' ');
+		printf("|_______________________|\n");
+		printf("| %c Settings            |\n" , choose == 2?'>':' ');
+		printf("|_______________________|\n");
+		printf("| %c Exit                |\n" , choose == 3?'>':' ');
+		printf("|_______________________|\n");
+		while(1)
+		{
+			char ch = getKey();
+			if(ch == up && choose != 0)
+			{
+				choose--;
+				break;
+			}
+			if(ch == down && choose != 3)
+			{
+				choose++;
+				break;
+			}
+			if(ch == enter)
+			{
+				return choose;
+			}
+			if(ch == esc)
+			{
+				return quit;
+			}
+			
+		}
+	}
+}
+
+void options(){
+	int choose = 0;
+	while(1)
+	{
+		system("@cls||clear");
+		printf("Settings: \n");
+		printf("__________________________\n");
+		printf("| %c PacMan Character : %c |\n", choose == 0?'>':' ' , cPlayer);
+		printf("|________________________|\n");
+		printf("| %c Fruit Character :  %c |\n" , choose == 1?'>':' ' , cFruit);
+		printf("|________________________|\n");
+		printf("| %c Solid Wall         %c |\n" , choose == 2?'>':' ' , wall?'Y':'N');
+		printf("|________________________|\n");
+		printf("| %c Quit                 |\n" , choose == 3?'>':' ');
+		printf("|________________________|\n");
+		while(1)
+		{
+			char ch = getKey();
+			if(ch == up && choose != 0)
+			{
+				choose--;
+				break;
+			}
+			if(ch == down && choose != 3)
+			{
+				choose++;
+				break;
+			}
+			if(ch == enter)
+			{
+				if(choose == 0)
+				{
+					fflush(stdin);
+					system("@cls||clear");
+					printf("Enter new character: ");
+					scanf("%c" , &cPlayer);
+					if(cPlayer == cEmpty || cPlayer == cBlock || cPlayer == cFruit)
+					{
+						printf("Error! %c has taken.", cPlayer);
+						cFruit = '*';
+						cPlayer = 'O';
+					}
+					fflush(stdin);
+					break;
+				}
+				if(choose == 1)
+				{
+					fflush(stdin);
+					system("@cls||clear");
+					printf("Enter new character: ");
+					scanf("%c" , &cFruit);
+					if(cFruit == cEmpty || cFruit == cBlock || cPlayer == cFruit)
+					{
+						printf("Error! %c has taken.", cFruit);
+						cFruit = '*';
+						cPlayer = 'O';
+					}
+					fflush(stdin);
+					break;
+				}
+				if (choose == 2)
+				{
+					wall = !wall;
+					break;
+				}
+				if(choose == 3)return;
+			}
+			if(ch == esc)
+			{
+				return;
+			}
+			
+		}
+	}
+}
+
+void gotoxy(int eex, int eey)
+{
+  COORD coord;
+  coord.X = eex;
+  coord.Y = eey;
+  SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+
+int main(){
+	init_map(4,4);
+	system("@cls||clear");
+	printMap(4,4);
+	sleep(1);
+	findStar(4,4);
+	findWay(star.x,star.y,4,4);
+	while(1)
+	{
+		if(checkEnd(4,4)) break;
+		move();
+		sleep(1);
+	}
+
+	
+}
