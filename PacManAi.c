@@ -14,6 +14,7 @@ char cFruit = '*';
 bool wall = true;
 
 
+void gotoxy();
 typedef struct point{
 	int cx;
 	int cy;
@@ -32,7 +33,7 @@ enum option{aiplay,selfplay,settings,quit};
 point map[5][10];
 int X;
 int Y;
-Star star; 
+Star star;
 
 void init_map(int maxX, int maxY){
 	char temp;
@@ -344,7 +345,7 @@ int main(){
 		if(choose == aiplay)
 		{
 			init_map(4,4);
-			system("@cls||clear");
+			system("cls");
 			printMap(4,4);
 			sleep(1);
 			findStar(4,4);
@@ -359,7 +360,7 @@ int main(){
 		if(choose == selfplay)
 		{
 			init_map(5,10);
-			system("@cls||clear");
+			system("cls");
 			printMap(5,10);
 			while(1)
 			{
@@ -368,7 +369,13 @@ int main(){
 				if(key == up)
 				{
 					if(X == 0 && !wall && map[4][Y].data != cBlock)
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
 						X = 4;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
 					else if(X != 0 && map[X-1][Y].data != cBlock) 
 					{
 						gotoxy(Y+1,X+1);
@@ -381,7 +388,13 @@ int main(){
 				if(key == down)
 				{
 					if(X == 4 && !wall && map[0][Y].data != cBlock)
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
 						X = 0;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
 					else if(X != 4 && map[X+1][Y].data != cBlock) 
 					{
 						gotoxy(Y+1,X+1);
@@ -394,7 +407,13 @@ int main(){
 				if(key == right)
 				{
 					if(Y == 9 && !wall  && map[X][0].data != cBlock)
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
 						Y = 0;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
 					else if(Y != 9 && map[X][Y+1].data != cBlock) 
 					{
 						gotoxy(Y+1,X+1);
@@ -407,7 +426,13 @@ int main(){
 				if(key == left)
 				{
 					if(Y == 0 && !wall && map[X][9].data != cBlock)
+					{
+						gotoxy(Y+1,X+1);
+						printf("%c" , map[X][Y].data);
 						Y = 9;
+						gotoxy(Y+1,X+1);
+						printf("%c\b" , cPlayer);
+					}
 					else if(Y != 0 && map[X][Y-1].data != cBlock)
 					{
 						gotoxy(Y+1,X+1);
